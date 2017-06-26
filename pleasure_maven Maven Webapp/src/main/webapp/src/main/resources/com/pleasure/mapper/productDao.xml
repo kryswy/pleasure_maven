@@ -1,0 +1,78 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" 
+"http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+
+<mapper namespace="com.pleasure.dao.ProductDao">
+	<select id="getProductsByClassId" resultType="com.pleasure.dto.Product">
+		select * from product where class1=#{classID} or class2=#{classID} or class3=#{classID}
+	</select>
+	<select id="getProductById" resultType="com.pleasure.dto.Product">
+        SELECT * FROM product WHERE productID=#{id}
+    </select>
+    <update id="UpdateProductHot">
+    	update product set hot=hot+#{amount} where productID=#{productID}
+    </update>
+    <select id="getProductsTop10" resultType="com.pleasure.dto.Product">
+    	select * from product order by hot desc limit 10
+    </select>
+    <select id="getProductsByDSQL" resultType="com.pleasure.dto.Product">
+    	select * from product
+    	<where>
+    		<if test="class1!=null">
+    			class1=#{class1}
+    		</if>
+    		<if test="class2!=null">
+    			and class2=#{class2}
+    		</if>
+    		<if test="class3!=null">
+    			and class3=#{class3}
+    		</if>
+    		<if test="minPrice!=null and maxPrice!=null">
+    			and price between #{minPrice} and #{maxPrice}
+    		</if>
+    	</where>
+    </select>
+    <select id="getAllProducts" resultType="com.pleasure.dto.Product">
+        SELECT * FROM product
+    </select>
+     <select id="SearchByStr"  resultType="com.pleasure.dto.Product">
+    SELECT * FROM product where name like concat('%',#{searchStr},'%') or
+    	class1 in (select classID from class  where name like concat('%',#{searchStr},'%') )
+    	or 
+    	class2 in (select classID from class  where name like concat('%',#{searchStr},'%') )
+    	or
+    	class3 in (select classID from class  where name like concat('%',#{searchStr},'%') )
+    </select>
+    <insert id="addProduct">
+		insert into
+		product(name,imageURL1,imageURL2,imageURL3,price,description,addition,class1,class2,class3,address)
+		values(#{name},#{imageURL1},#{imageURL2},#{imageURL3},#{price},#{description},#{addition},#{class1},#{class2},#{class3},#{address})
+	</insert>
+
+	
+
+	<select id="searchProduct" resultType="com.pleasure.dto.Product">
+		select * from product
+		where name like concat('%',#{search},'%')  </select>
+
+	<delete id="deleteProductByID">
+		delete from product where productID = #{id}
+	</delete>
+
+	<update id="updateProduct">
+		update product set
+		name=#{name},imageURL1=#{imageURL1},imageURL2=#{imageURL2},imageURL3=#{imageURL3},price=#{price},description=#{description},addition=#{addition},class1=#{class1},class2=#{class2},class3=#{class3},address=#{address}
+		where productID = #{productID}
+	</update>
+	<select id="getCollectionsByUserID" resultType="com.pleasure.dto.Product">
+		select * from product where productID in (select productID from collect where userID=#{userID})
+	</select>
+	<insert id="addProcductToCollection">
+		insert into
+		collect(productID,userID)
+		values(#{productID},#{userID})
+	</insert>
+	<delete id="deleteProcductFromCollection">
+		delete from collect where productID=#{productID} and userID=#{userID}
+	</delete>
+</mapper>

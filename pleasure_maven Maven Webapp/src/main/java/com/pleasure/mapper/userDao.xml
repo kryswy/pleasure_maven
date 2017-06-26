@@ -1,0 +1,30 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" 
+"http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+
+<mapper namespace="com.pleasure.dao.UserDao">
+	<insert id="addUser">
+		insert into user(userName,firstName,lastName,password,email,activateCode)
+		values(#{userName},#{firstName},#{lastName},#{password},#{email},#{activateCode})
+	</insert>
+	<select id="getUserByUserName" resultType="com.pleasure.dto.User">
+		select * from user where userName=#{userName}
+	</select>
+	<select id="getUserById" resultType="com.pleasure.dto.User">
+		select * from user where userID=#{userID}
+	</select>
+	
+	<update id="changeActiveState">
+		update user set activate=1 where userID=#{userID}
+	</update>
+	<update id="setUserPwdCode">
+		update user set passwordCode=#{passwordCode} where userID=#{userID}
+	</update>
+	<update id="changePwd">
+		update user set password=#{newpassword} where userID=#{userID}
+	</update>
+	<select id="getUserList" resultType="com.pleasure.dto.User">
+		select * from user
+	</select>
+	
+</mapper>

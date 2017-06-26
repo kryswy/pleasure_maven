@@ -1,0 +1,45 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+        "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.pleasure.dao.CartDao">
+    
+    <select id="getCartByID" resultType="com.pleasure.dto.Cart">
+        SELECT * FROM cart where userID=#{id,jdbcType=INTEGER}
+    </select>
+    <select id="getCartByCartID" resultType="com.pleasure.dto.Cart">
+        SELECT * FROM cart where cartID=#{id,jdbcType=INTEGER}
+    </select>
+    
+    <insert id="createCart">
+        INSERT INTO cart(userID,date) VALUES(#{userID,jdbcType=INTEGER},#{date,jdbcType=VARCHAR})
+    </insert>
+    <select id="getProductList" resultType="java.util.HashMap">
+        SELECT productID,amount FROM cart_p WHERE cartID=#{cartID,jdbcType=INTEGER} AND amount!=0
+    </select>
+    <update id="changeAmount">
+        UPDATE cart_p SET amount=#{amount,jdbcType=INTEGER} WHERE cartID=#{cartID,jdbcType=INTEGER} AND productID=#{productID,jdbcType=INTEGER}
+    </update>
+    <update id="deleteProduct">
+        UPDATE cart_p SET amount=0 WHERE productID=#{productID,jdbcType=INTEGER} AND cartID=#{cartID,jdbcType=INTEGER}
+    </update>
+    <update id="countPrice">
+        UPDATE cart SET price = #{count,jdbcType=DECIMAL} where cartID=#{cartID}
+    </update>
+    <select id="getCount" resultType="java.lang.Double">
+        SELECT price FROM cart WHERE cartID=#{cartID,jdbcType=INTEGER}
+    </select>
+    <delete id="emptyCart">
+        delete from cart WHERE cartID=#{cartID,jdbcType=INTEGER}
+    </delete>
+
+    
+    <insert id="addProcductToCart">
+    	insert into cart_p(cartID,productID,amount) values(#{cartID},#{productID},#{amount})
+    </insert>
+    <select id="getProductIDByCartID" resultType="Integer">
+    	select cart_p_id from cart_p where cartID=#{cartID} and productID=#{productID}
+    </select>
+    <update id="UpdateProductAmount">
+    	update cart_p set amount=amount+#{amount} where cartID=#{cartID} and productID=#{productID}
+    </update>
+</mapper>

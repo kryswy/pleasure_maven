@@ -1,0 +1,38 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+        "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.pleasure.dao.OrderDao">
+
+    <insert id="createOrder">
+        INSERT INTO `order`(userID,date,price) VALUES(#{userID},#{date},#{price})
+    </insert>
+
+    <select id="getLastOrder" resultType="com.pleasure.dto.Order">
+        select * from `order` order by orderID desc limit 1;
+    </select>
+    <insert id="addProducts">
+        INSERT INTO o_p(orderID,productID,amount) VALUES(#{orderID,jdbcType=INTEGER},#{productID,jdbcType=INTEGER},#{amount,jdbcType=INTEGER})
+    </insert>
+    <select id="getUserIDByID">
+		select userID from `order` where orderID = #{id}
+	</select>
+
+	<select id="getProductsIDByID" resultType="Integer">
+		select productID from
+		o_p where orderID = #{id}
+	</select>
+
+	<select id="getOrderByID" resultType="com.pleasure.dto.Order">
+		select * from `order` where
+		orderID = #{id}
+	</select>
+
+	<select id="getOrderByUserID" resultType="Integer">
+		select orderID from
+		`order` where UserID = #{id}
+	</select>
+
+	<delete id="deleteOrderByID">
+		delete from `order` where orderID = #{id}
+	</delete>
+</mapper>

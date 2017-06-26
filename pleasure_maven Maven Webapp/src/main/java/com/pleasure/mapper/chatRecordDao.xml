@@ -1,0 +1,20 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+        "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.pleasure.dao.ChatRecordDao">
+    <select id="getRecord" resultType="com.pleasure.dto.ChatRecord">
+        SELECT * FROM (SELECT * FROM chatrecord as c WHERE c.username=#{username} order by c.id DESC limit 30) as a ORDER BY a.id ASC
+    </select>
+    <insert id="saveRecord">
+        INSERT INTO chatrecord(username,direction,msg,filesrc,createtime,isread) VALUES (#{username},#{direction},#{msg},#{filesrc},#{createtime},#{isread})
+    </insert>
+    <update id="hasRead">
+        UPDATE chatrecord SET isread=1 WHERE username=#{username}
+    </update>
+    <select id="getNoReadNames" resultType="java.lang.String">
+        SELECT username FROM chatrecord where isread=0 GROUP BY username
+    </select>
+    <select id="countRecords" resultType="java.lang.Integer">
+        SELECT COUNT(id) FROM chatrecord
+    </select>
+</mapper>
